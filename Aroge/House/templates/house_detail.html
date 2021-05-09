@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head class="header-site">
+        <meta charset="UTF-8">
+        {% load static %}
+        <title>House Detail</title>
+
+        <link rel="stylesheet" href="{% static 'files/bootstrap/css/bootstrap.css' %}"  type="text/css" >
+        
+        <link rel="stylesheet" href="{% static 'files/style5.css' %}"  type="text/css" >
+
+        <style>
+            
+            th, td {
+              padding: 15px;
+            }
+            </style>
+    </head>
+    <body>
+
+    <div class = "container col-8" style="margin-top: 50px;">
+        <div class="col-sm-7">
+            <img style="margin-bottom: 20px;" src="{% static house.photo.all.0.image.url %}"  height="400" width="740">
+            <br>
+            <div class="row">
+                {% for i in house.photo.all %}
+                <div class="col-sm-3">
+                    <img src="{% static i.image.url %}"  height="100" width="150">
+                </div>
+                {%endfor%}
+            </div>
+            <table class="table table-light" style="margin-top: 50px;width: 740px;" >
+                <tr>
+                    <td style="width: 200px;font-size: 25px;"><strong>Price:</strong></td>
+                    <td style="padding-left:50px;font-size: 25px"><strong>ETB {{house.price}}</strong></td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;"><strong>Location:</strong></td>
+                    <td style="padding-left:50px;">{{house.location}}</td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;"><strong>Size:</strong></td>
+                    <td style="padding-left:50px;">{{house.size}}</td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;"><strong>type:</strong></td>
+                    <td style="padding-left:50px;">{{house.sell_or_rent}}</td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;"><strong>Condition:</strong></td>
+                    <td style="padding-left:50px;">{{house.condition}}</td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;"><strong>House Type:</strong></td>
+                    <td style="padding-left:50px;">{{house.house_type}}</td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;"><strong>Bed room:</strong></td>
+                    <td style="padding-left:50px;">{{house.bedroom}}</td>
+                </tr>
+                
+            </table>
+
+        </div>
+        <div class="col-sm-5">
+            <div style="float: right;">
+                {% if house.sell_or_rent == "Sell" %}
+                <label style="font-size: 25px;"><strong>Seller Information</strong></label>
+                {% else %}
+                <label style="font-size: 25px;"><strong>Renter Information</strong></label>
+                {%endif%}
+                <table style="border-spacing: 20px; font-size:16px;">
+                    <tr >
+                        <td>
+                            <img src="{% static 'files/icons/seller.png' %}" height="30" width="30">
+                        </td>
+                        <td style="padding-left: 20%;">
+                            {{house.seller.name}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td >
+                            <img src="{% static 'files/icons/location.png' %}" height="30" width="30">
+                        </td>
+                        <td style="padding-left: 20%;">
+                            {{house.seller.location}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <img src="{% static 'files/icons/phone.png' %}" height="30" width="30">
+                        </td>
+                        <td style="padding-left: 20%;">
+                            {{house.seller.phone}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+            
+       
+    </div>
+    </body>
+
+</html>

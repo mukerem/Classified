@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head class="header-site">
+        <meta charset="UTF-8">
+        {% load widget_tweaks %}
+        {% load static %}
+        <title>House List</title>
+
+        <link rel="stylesheet" href="{% static 'files/bootstrap/css/bootstrap.css' %}"  type="text/css" >
+       
+        <link rel="stylesheet" href="{% static 'files/style5.css' %}"  type="text/css" >
+
+    </head>
+    <body>
+
+    <div class = "container col-12" style="margin-top: 50px; float: left; margin-left: 200px;">
+
+        <div class="col-sm-3" style="margin-top: 200px; margin-right: 0px;">
+            <form  method="POST" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+            
+                    
+                <table class="table table-light" style="width: 75%;" >
+                    {% for field in form.visible_fields %}
+                            
+                        <tr>
+                            <td>
+                            {% if field.field.required%}
+                                <strong>{{ field.label_tag }}</strong>
+                            {% else %}
+                                {{ field.label_tag }}
+                            {% endif %}
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                    
+                            {% if form.is_bound %}
+                                {% if field.errors %}
+                                    {% render_field field class="form-control is-invalid" %}
+                                    {% for  error in field.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+
+                                {% else %}
+                                    {% render_field field class="form-control is-valid" %}
+                                {% endif %}
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+                                            
+
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </td>
+                    <tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" name="button" class="btn-primary" style="width: 180px; height: 30px;">Filter</button>
+            </form>
+        </div>
+        <div class="col-sm-9">
+            {% for i in house_list %}
+            <div class="row">
+                <div class="col-sm-5">
+                        <a href="{% url 'house_detail' i.id %}"><img src="{% static i.image.url %}"  height="200" width="300"></a>
+                </div>
+                <div class="col-sm-7">
+                        <table class="table table-light">
+                            <tr>
+                                <td style="width: 200px;font-size: 25px;"><strong>Price:</strong></td>
+                                <td style="padding-left:50px;font-size: 25px"><strong>ETB {{i.price}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;"><strong>Location:</strong></td>
+                                <td style="padding-left:50px;">{{i.location}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;"><strong>Size:</strong></td>
+                                <td style="padding-left:50px;">{{i.size}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;"><strong>type:</strong></td>
+                                <td style="padding-left:50px;">{{i.sell_or_rent}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;"><strong>Condition:</strong></td>
+                                <td style="padding-left:50px;">{{i.condition}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;"><strong>House Type:</strong></td>
+                                <td style="padding-left:50px;">{{i.house_type}}</td>
+                            </tr>
+                            <!-- <tr>
+                                <td style="width: 200px;"></td>
+                                <td style="padding-left:50px;">	
+                                    <a class="btn btn-primary" href="#" style="margin-left:15px;margin-right:15px;">
+                                    Show Detail</a></td>
+                            </tr> -->
+                            
+                        </table>
+                </div>
+            <hr>
+            </div>
+                
+            {% endfor %}
+                <!-- pagination -->
+            {% if house_list.has_other_pages %}
+                {% load proper_paginate %}
+                {% load url_replace %}
+                <ul class="pagination">
+                    {% if house_list.number == 1 %}
+                        <li class="disabled"><span>⇤</span></li>
+                    {% else %}
+                        <li><a class="page-link" href="?{% url_replace request 'page' 1 %}">⇤</a></li>
+                    {% endif %}
+                    {% if house_list.has_previous %}
+                        
+                        <li><a class="page-link" href="?{% url_replace request 'page' house_list.previous_page_number %}">&laquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in paginator|proper_paginate:house_list.number%}
+                        {% if house_list.number == i %}
+                            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li><a class="page-link" href="?{% url_replace request 'page' i %}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if house_list.has_next %}
+                        <li><a class="page-link" href="?{% url_replace request 'page' house_list.next_page_number %}">&raquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                    {% if house_list.number == paginator.num_pages %}
+                        <li class="disabled"><span>⇥</span></li>
+                    {% else %}
+                        <li><a class="page-link" href="?{% url_replace request 'page' paginator.num_pages %}">⇥</a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            <!-- end pagination -->   
+        </div>
+    </div>
+    </body>
+
+</html>
